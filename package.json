@@ -18,6 +18,14 @@
     "nextjs",
     "espanol"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julianmcancelo/google-wallet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/julianmcancelo/google-wallet/issues"
+  },
+  "homepage": "https://github.com/julianmcancelo/google-wallet#readme",
   "bin": {
     "google-wallet": "./bin/cli.js"
   },
