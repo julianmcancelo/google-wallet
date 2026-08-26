@@ -1,8 +1,15 @@
 # Google Wallet para Node.js, Next.js y React
 
+[![Probar en StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/julianmcancelo/google-wallet)
+[![npm version](https://img.shields.io/npm/v/@jcancelo/google-wallet.svg?style=flat-square&color=4285F4)](https://www.npmjs.com/package/@jcancelo/google-wallet)
+[![TypeScript](https://img.shields.io/badge/TypeScript-100%25-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](LICENSE)
+
 Librería de código abierto para crear, firmar criptográficamente y emitir pases de Google Wallet (Billetera de Google) de forma dinámica en aplicaciones JavaScript y TypeScript.
 
 Permite generar pases de eventos y entradas (`EventTicket`), credenciales y membresías (`GenericPass`), y tarjetas de puntos o fidelidad (`LoyaltyCard`) sin necesidad de configurar llamadas manuales a la API REST de Google ni lidiar con la firma manual de tokens JWT RS256.
+
+👉 **[Abrir demostración interactiva en StackBlitz](https://stackblitz.com/github/julianmcancelo/google-wallet)** (sin instalar nada en tu computadora).
 
 ---
 

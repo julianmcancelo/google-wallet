@@ -53,6 +53,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "demo": "vite --config demo/vite.config.ts",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -75,9 +76,11 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite": "^8.2.2"
   }
 }
