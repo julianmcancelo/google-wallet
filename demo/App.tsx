@@ -451,7 +451,7 @@ const tarjeta = wallet.crearPaseFidelidad({
           </h2>
           <button
             onClick={copiarCodigo}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 transition"
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 transition cursor-pointer"
           >
             {copiado ? '¡Copiado!' : 'Copiar Código'}
           </button>
@@ -461,6 +461,43 @@ const tarjeta = wallet.crearPaseFidelidad({
           <code>{generarCodigo()}</code>
         </pre>
       </div>
+
+      {/* Acerca del Desarrollador */}
+      <footer className="border-t border-slate-800/80 pt-8 pb-12 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-base shadow-lg ring-2 ring-blue-500/20">
+            JC
+          </div>
+          <div>
+            <div className="flex items-center gap-2 justify-center md:justify-start">
+              <h3 className="text-sm font-black text-white">Julián Cancelo</h3>
+              <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-bold">
+                Autor & Desarrollador
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Desarrollador de software especializado en aplicaciones web, móviles y soluciones open source.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/julianmcancelo"
+            target="_blank"
+            rel="noreferrer"
+            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white transition-colors"
+          >
+            GitHub (@julianmcancelo)
+          </a>
+          <a
+            href="mailto:jcancelo.dev@gmail.com"
+            className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition-colors shadow-sm"
+          >
+            Contacto
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -267,6 +267,16 @@ Para consultar los pasos detallados sobre cómo crear la cuenta en Google Cloud 
 
 ---
 
+## Acerca del Desarrollador
+
+Librería desarrollada por **Julián Cancelo** ([@julianmcancelo](https://github.com/julianmcancelo)), desarrollador de software y creador de herramientas y librerías de código abierto para el ecosistema JavaScript / TypeScript, React y móviles.
+
+* **GitHub**: [github.com/julianmcancelo](https://github.com/julianmcancelo)
+* **Correo de contacto**: [jcancelo.dev@gmail.com](mailto:jcancelo.dev@gmail.com)
+* **Reportar problemas o sugerencias**: [GitHub Issues](https://github.com/julianmcancelo/google-wallet/issues)
+
+---
+
 ## Licencia
 
 MIT © [Julian Cancelo](https://github.com/julianmcancelo)
