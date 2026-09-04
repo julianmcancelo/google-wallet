@@ -7,7 +7,7 @@
 export { BilleteraGoogle, GoogleWallet } from './cliente.js';
 export { firmarTokenGoogleWallet, generarUrlGuardarWallet } from './jwt/firmador.js';
 export { decodificarCodigoGoogleWallet } from './utilidades/decodificador.js';
-export { normalizarClavePrivada, formatearIdCompleto, normalizarCodigoBarras } from './utilidades/normalizadores.js';
+export { normalizarClavePrivada, formatearIdCompleto, normalizarCodigoBarras, normalizarFechaIso } from './utilidades/normalizadores.js';
 
 export type {
   OpcionesBilletera,
@@ -20,6 +20,7 @@ export type {
   ResultadoPase,
   CampoTexto,
   EnlaceAccion,
+  MensajeWallet,
   OpcionesCodigoBarras,
   TipoCodigoBarras,
   EstadoTarjeta

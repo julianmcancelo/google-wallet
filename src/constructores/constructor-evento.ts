@@ -57,6 +57,14 @@ export function construirClaseEvento(emisorId: string, datos: ClaseEvento, idiom
     };
   }
 
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    clase.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_clase_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
+    }));
+  }
+
   return clase;
 }
 
@@ -71,6 +79,23 @@ export function construirObjetoEvento(emisorId: string, datos: PaseEvento, idiom
     ticketHolderName: datos.nombreTitular,
     barcode: normalizarCodigoBarras(datos.codigoBarras)
   };
+
+  // Tipo de entrada / Ticket type
+  if (datos.tipoEntrada) {
+    objeto.ticketType = {
+      defaultValue: {
+        language: idioma,
+        value: datos.tipoEntrada
+      }
+    };
+  }
+
+  // Código de confirmación / Reserva
+  if (datos.codigoReserva) {
+    objeto.reservationInfo = {
+      confirmationCode: datos.codigoReserva
+    };
+  }
 
   // Asignación de asiento / ubicación
   if (datos.ubicacion) {
@@ -88,6 +113,15 @@ export function construirObjetoEvento(emisorId: string, datos: PaseEvento, idiom
       id: c.clave || `campo_${idx}`,
       header: c.etiqueta,
       body: c.valor
+    }));
+  }
+
+  // Mensajes destacados en el pase
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    objeto.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_obj_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
     }));
   }
 

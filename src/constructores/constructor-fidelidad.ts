@@ -39,6 +39,14 @@ export function construirClaseFidelidad(emisorId: string, datos: ClaseFidelidad,
     clase.hexBackgroundColor = datos.colorFondoHex;
   }
 
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    clase.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_clase_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
+    }));
+  }
+
   return clase;
 }
 
@@ -74,6 +82,14 @@ export function construirObjetoFidelidad(emisorId: string, datos: PaseFidelidad,
       id: c.clave || `campo_${idx}`,
       header: c.etiqueta,
       body: c.valor
+    }));
+  }
+
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    objeto.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_obj_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
     }));
   }
 

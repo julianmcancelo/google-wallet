@@ -36,6 +36,14 @@ export function construirClaseGenerica(emisorId: string, datos: ClaseGenerica, i
     clase.hexBackgroundColor = datos.colorFondoHex;
   }
 
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    clase.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_clase_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
+    }));
+  }
+
   return clase;
 }
 
@@ -56,11 +64,32 @@ export function construirObjetoGenerico(emisorId: string, datos: PaseGenerico, i
     objeto.subheader = { defaultValue: { language: idioma, value: datos.subencabezado } };
   }
 
+  // Fotografía del titular
+  if (datos.fotoTitularUrl) {
+    objeto.imageModulesData = [
+      {
+        id: 'foto_titular',
+        mainImage: {
+          sourceUri: { uri: datos.fotoTitularUrl },
+          contentDescription: { defaultValue: { language: idioma, value: 'Fotografía' } }
+        }
+      }
+    ];
+  }
+
   if (datos.campos && datos.campos.length > 0) {
     objeto.textModulesData = datos.campos.map((c, idx) => ({
       id: c.clave || `campo_${idx}`,
       header: c.etiqueta,
       body: c.valor
+    }));
+  }
+
+  if (datos.mensajes && datos.mensajes.length > 0) {
+    objeto.messages = datos.mensajes.map((m, idx) => ({
+      id: m.id || `msg_obj_${idx}`,
+      header: m.encabezado,
+      body: m.cuerpo
     }));
   }
 

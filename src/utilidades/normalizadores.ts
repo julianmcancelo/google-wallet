@@ -47,15 +47,21 @@ export function normalizarCodigoBarras(codigo: string | OpcionesCodigoBarras) {
 }
 
 /**
- * Normaliza una fecha a formato ISO 8601 exigido por Google Wallet
+ * Normaliza una fecha a formato ISO 8601 exigido por Google Wallet.
+ * Si la fecha ya incluye una zona horaria explícita (+/-HH:mm o Z), se preserva intacta.
  */
 export function normalizarFechaIso(fecha?: string): string | undefined {
   if (!fecha) return undefined;
+  const fechaLimpia = fecha.trim();
+  const tieneZonaHoraria = /(?:[+-]\d{2}:?\d{2}|Z)$/i.test(fechaLimpia);
+  if (tieneZonaHoraria) {
+    return fechaLimpia;
+  }
   try {
-    const d = new Date(fecha);
-    if (isNaN(d.getTime())) return fecha;
+    const d = new Date(fechaLimpia);
+    if (isNaN(d.getTime())) return fechaLimpia;
     return d.toISOString();
   } catch {
-    return fecha;
+    return fechaLimpia;
   }
 }

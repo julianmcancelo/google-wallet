@@ -56,6 +56,16 @@ export interface EnlaceAccion {
   texto: string;
 }
 
+/** Mensaje destacado o notificación dentro del pase */
+export interface MensajeWallet {
+  /** Encabezado o título del mensaje (ej: "Aviso importante", "Puerta de ingreso") */
+  encabezado: string;
+  /** Cuerpo descriptivo del mensaje */
+  cuerpo: string;
+  /** Identificador único del mensaje */
+  id?: string;
+}
+
 /** Tipo de estado de una tarjeta */
 export type EstadoTarjeta = 'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'INACTIVE';
 
@@ -82,6 +92,8 @@ export interface ClaseEvento {
   nombreLugar?: string;
   /** Dirección física del lugar */
   direccionLugar?: string;
+  /** Mensajes destacados o notificaciones de la clase */
+  mensajes?: MensajeWallet[];
 }
 
 export interface PaseEvento {
@@ -91,6 +103,10 @@ export interface PaseEvento {
   idObjeto: string;
   /** Nombre del titular o asistente */
   nombreTitular: string;
+  /** Tipo de entrada o categoría (ej: "Graduado", "VIP", "Platea Preferencial") */
+  tipoEntrada?: string;
+  /** Código de confirmación o reserva (confirmationCode) */
+  codigoReserva?: string;
   /** Código QR o de barras a mostrar */
   codigoBarras: string | OpcionesCodigoBarras;
   /** Ubicación o asiento asignado */
@@ -102,6 +118,8 @@ export interface PaseEvento {
   };
   /** Campos de texto personalizados */
   campos?: CampoTexto[];
+  /** Mensajes o avisos individuales en la tarjeta */
+  mensajes?: MensajeWallet[];
   /** Enlaces web o botones interactivos */
   enlaces?: EnlaceAccion[];
   /** Estado del pase */
@@ -121,6 +139,8 @@ export interface ClaseGenerica {
   bannerUrl?: string;
   /** Color de fondo Hexadecimal */
   colorFondoHex?: string;
+  /** Mensajes destacados o avisos institucionales */
+  mensajes?: MensajeWallet[];
 }
 
 export interface PaseGenerico {
@@ -134,10 +154,14 @@ export interface PaseGenerico {
   encabezado: string;
   /** Subtítulo (ej: "Socio N° 4582", "Plan Anual") */
   subencabezado?: string;
+  /** URL de la fotografía de perfil o titular */
+  fotoTitularUrl?: string;
   /** Código QR o de barras */
   codigoBarras: string | OpcionesCodigoBarras;
   /** Campos de información adicional */
   campos?: CampoTexto[];
+  /** Mensajes o avisos en la tarjeta */
+  mensajes?: MensajeWallet[];
   /** Enlaces o botones */
   enlaces?: EnlaceAccion[];
   /** Estado del pase */
@@ -159,6 +183,8 @@ export interface ClaseFidelidad {
   bannerUrl?: string;
   /** Color de fondo Hexadecimal */
   colorFondoHex?: string;
+  /** Mensajes destacados del programa */
+  mensajes?: MensajeWallet[];
 }
 
 export interface PaseFidelidad {
@@ -178,6 +204,8 @@ export interface PaseFidelidad {
   codigoBarras: string | OpcionesCodigoBarras;
   /** Campos adicionales */
   campos?: CampoTexto[];
+  /** Mensajes o promociones en la tarjeta */
+  mensajes?: MensajeWallet[];
   /** Enlaces o promociones */
   enlaces?: EnlaceAccion[];
   /** Estado de la tarjeta */

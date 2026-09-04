@@ -14,6 +14,27 @@ export interface CodigoDecodificado {
   objetoId?: string;
 }
 
+function decodificarBase64Seguro(str: string): string {
+  try {
+    const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    const relleno = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(relleno, 'base64').toString('utf-8');
+    }
+    if (typeof atob !== 'undefined') {
+      return decodeURIComponent(
+        atob(relleno)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+    }
+  } catch {
+    // Retorno seguro en caso de formato inválido
+  }
+  return '';
+}
+
 /**
  * Decodifica cualquier código o URL proveniente de Google Wallet, cámaras o escáneres.
  */
@@ -26,22 +47,30 @@ export function decodificarCodigoGoogleWallet(entrada: string): CodigoDecodifica
     if (jwtParte.includes('.')) {
       try {
         const payloadBase64 = jwtParte.split('.')[1];
-        const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf-8');
-        const payload = JSON.parse(payloadJson);
-        
-        // Buscar barcode value
-        const objetos = payload?.payload?.eventTicketObjects || payload?.payload?.genericObjects || [];
-        if (objetos.length > 0) {
-          const primer = objetos[0];
-          const valorBarcode = primer?.barcode?.value;
-          const objetoId = primer?.id;
-          if (valorBarcode) {
-            const limpio = valorBarcode.replace(/^SIGIC:/i, '').trim();
-            return { codigoLimpio: limpio, formato: 'jwt_wallet', tokenOriginal: limpio, objetoId };
+        const payloadJson = decodificarBase64Seguro(payloadBase64);
+        if (payloadJson) {
+          const payload = JSON.parse(payloadJson);
+          
+          // Buscar barcode value en tickets de eventos, credenciales o fidelidad
+          const objetos = payload?.payload?.eventTicketObjects 
+            || payload?.payload?.genericObjects 
+            || payload?.payload?.loyaltyObjects 
+            || [];
+            
+          if (objetos.length > 0) {
+            const primer = objetos[0];
+            const valorBarcode = primer?.barcode?.value;
+            const codigoReserva = primer?.reservationInfo?.confirmationCode;
+            const objetoId = primer?.id;
+            const valorFinal = valorBarcode || codigoReserva;
+            if (valorFinal) {
+              const limpio = valorFinal.replace(/^SIGIC:/i, '').trim();
+              return { codigoLimpio: limpio, formato: 'jwt_wallet', tokenOriginal: limpio, objetoId };
+            }
           }
         }
       } catch {
-        // Fallback si falla decodificar base64
+        // Fallback si falla decodificar base64 o JSON
       }
     }
   }
@@ -52,9 +81,9 @@ export function decodificarCodigoGoogleWallet(entrada: string): CodigoDecodifica
     return { codigoLimpio: limpio, formato: 'prefijo_sigic', tokenOriginal: limpio };
   }
 
-  // 3. Identificador de objeto Google Wallet: 3388...sigic-ceremonia-token
-  if (texto.includes('.sigic-') || texto.includes('sigic-')) {
-    const partes = texto.split('-');
+  // 3. Identificador de objeto Google Wallet: 3388...sigic-ceremonia-token o 3388...sigic_cer_1_token
+  if (/sigic[_-]/i.test(texto)) {
+    const partes = texto.split(/[_-]/);
     const ultimo = partes[partes.length - 1];
     return { codigoLimpio: ultimo, formato: 'objeto_wallet', objetoId: texto, tokenOriginal: ultimo };
   }

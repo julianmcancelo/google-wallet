@@ -1,6 +1,6 @@
 {
   "name": "@jcancelo/google-wallet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Librería moderna, tipada y 100% en español para crear, firmar y emitir pases de Google Wallet (Eventos, Credenciales y Membresías) en Node.js, Next.js y React.",
   "author": "Julian Cancelo <jcancelo.dev@gmail.com>",
   "license": "MIT",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/julianmcancelo/google-wallet#readme",
   "bin": {
-    "google-wallet": "./bin/cli.js"
+    "google-wallet": "bin/cli.js"
   },
   "type": "module",
   "main": "./dist/index.cjs",
@@ -45,8 +45,12 @@
       "require": "./dist/react/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
+    "bin",
     "README.md",
     "GUIA_GOOGLE_WALLET.md",
     "LICENSE"
@@ -55,7 +59,9 @@
     "dev": "vite",
     "demo": "vite",
     "build": "tsup",
-    "prepublishOnly": "npm run build"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/google-wallet.test.ts",
+    "prepublishOnly": "npm run typecheck && npm run build && npm test"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2"

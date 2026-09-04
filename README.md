@@ -9,22 +9,24 @@ Librería de código abierto para crear, firmar criptográficamente y emitir pas
 
 Permite generar pases de eventos y entradas (`EventTicket`), credenciales y membresías (`GenericPass`), y tarjetas de puntos o fidelidad (`LoyaltyCard`) sin necesidad de configurar llamadas manuales a la API REST de Google ni lidiar con la firma manual de tokens JWT RS256.
 
-👉 **[Abrir demostración interactiva en StackBlitz](https://stackblitz.com/github/julianmcancelo/google-wallet)** (sin instalar nada en tu computadora).
+[Abrir demostración interactiva en StackBlitz](https://stackblitz.com/github/julianmcancelo/google-wallet)
 
 ---
 
 ## Características principales
 
-* **Totalmente en español**: Métodos, tipos de TypeScript, parámetros y mensajes estructurados en español.
-* **Agnóstica y dinámica**: Sirve para cualquier tipo de proyecto (recitales, clubes, universidades, gimnasios, cines, empresas de software o comercios).
+* **100% en español**: Métodos, tipos de TypeScript, parámetros y mensajes estructurados nativamente en español.
+* **Agnóstica y dinámica**: Sirve para cualquier tipo de proyecto (recitales, actos académicos, colaciones, clubes, universidades, gimnasios, cines o comercios).
 * **Firma local sin latencia**: Construye y firma el JWT localmente con la clave privada de Google Cloud, generando el enlace directo de guardado al instante.
-* **3 tipos de pases soportados**:
-  * Entradas y Eventos (con fecha, recinto, puerta, fila y butaca).
-  * Credenciales y Carnets (con foto, datos del titular, categoría y vigencia).
-  * Tarjetas de Fidelidad y Puntos (con saldo, nivel de socio y promociones).
-* **Componente React integrado**: Incluye el botón oficial de guardado con soporte para modo claro y oscuro.
-* **Asistente por terminal**: Asistente interactivo por línea de comandos para generar la configuración inicial de tu proyecto.
-* **Decodificador de escáner**: Función para extraer el código limpio a partir de URLs o strings escaneados desde la billetera.
+* **Novedades de la versión 1.1.0**:
+  * `tipoEntrada`: Categoría o tipo de entrada oficial (`ticketType`), visible prominentemente en Google Wallet (ej: Graduado, VIP, Campo).
+  * `codigoReserva`: Código de confirmación o localizador de reserva nativo (`reservationInfo.confirmationCode`).
+  * `mensajes`: Avisos destacados y notificaciones en tarjetas (`messages`).
+  * `fotoTitularUrl`: Foto de perfil o carnet en credenciales genéricas (`imageModulesData`).
+  * **Preservación de zona horaria**: Respeta el offset horario provisto (`-03:00`, `+02:00`, `Z`) sin conversiones forzadas.
+  * **Decodificador de escáner mejorado**: Soporta Object IDs con guiones y guiones bajos (`sigic_cer_...`) y extracción desde URLs o JWTs.
+* **Componente React integrado**: Incluye el botón oficial de guardado con soporte para modo claro, oscuro y estado de carga.
+* **Asistente por terminal**: Generador interactivo de configuración inicial (`npx @jcancelo/google-wallet init`).
 
 ---
 
@@ -75,13 +77,18 @@ const pase = wallet.crearPaseEvento({
     logoUrl: 'https://tu-dominio.com/logo.png',
     bannerUrl: 'https://tu-dominio.com/banner.png',
     colorFondoHex: '#1E293B',
-    fechaInicio: '2026-11-20T21:00:00Z',
+    fechaInicio: '2026-11-20T21:00:00-03:00', // Preserva la zona horaria provista
     nombreLugar: 'Estadio Principal',
-    direccionLugar: 'Av. Libertador 1234, Buenos Aires'
+    direccionLugar: 'Av. Libertador 1234, Buenos Aires',
+    mensajes: [
+      { encabezado: 'Aviso importante', cuerpo: 'Las puertas abren 2 horas antes del inicio.' }
+    ]
   },
   pase: {
     idObjeto: 'ticket_usr_1044',
     nombreTitular: 'Martina Rodríguez',
+    tipoEntrada: 'Graduado / VIP',       // Tipo nativo en Google Wallet
+    codigoReserva: 'RES-104492-X',       // Código de confirmación nativo
     codigoBarras: 'TICKET-104492',
     ubicacion: {
       sector: 'Platea Baja',
@@ -90,8 +97,11 @@ const pase = wallet.crearPaseEvento({
       puertaAcceso: 'Puerta 2'
     },
     campos: [
-      { etiqueta: 'Tipo de Entrada', valor: 'Acceso General' },
+      { etiqueta: 'Categoría', valor: 'Acceso Preferencial' },
       { etiqueta: 'N° de Orden', valor: '#104492' }
+    ],
+    mensajes: [
+      { encabezado: 'Punto de ingreso', cuerpo: 'Presentar credencial en el puesto de acreditación.' }
     ],
     enlaces: [
       { url: 'https://tu-dominio.com/lineup', texto: 'Ver Cronograma' }
@@ -115,17 +125,24 @@ const credencial = wallet.crearPaseGenerico({
     id: 'carnet_socio_2026',
     nombreEmisor: 'Club Deportivo Central',
     colorFondoHex: '#047857',
-    logoUrl: 'https://tu-dominio.com/club-logo.png'
+    logoUrl: 'https://tu-dominio.com/club-logo.png',
+    mensajes: [
+      { encabezado: 'Horarios de verano', cuerpo: 'Piscina habilitada de 10 a 20 hs.' }
+    ]
   },
   pase: {
     idObjeto: 'socio_4812',
     tituloTarjeta: 'Carnet de Socio',
     encabezado: 'Santiago Méndez',
     subencabezado: 'Socio Pleno',
+    fotoTitularUrl: 'https://tu-dominio.com/fotos/socio_4812.jpg', // Fotografía oficial del titular
     codigoBarras: 'SOCIO:4812',
     campos: [
       { etiqueta: 'N° de Socio', valor: '4812' },
       { etiqueta: 'Vigencia', valor: 'Diciembre 2026' }
+    ],
+    mensajes: [
+      { encabezado: 'Estado de cuota', cuerpo: 'Al día - Acceso a todas las sedes.' }
     ]
   }
 });
@@ -146,7 +163,10 @@ const tarjetaPuntos = wallet.crearPaseFidelidad({
     nombrePrograma: 'Club de Beneficios',
     nombreEmisor: 'Café Roma',
     colorFondoHex: '#78350F',
-    logoUrl: 'https://tu-dominio.com/logo.png'
+    logoUrl: 'https://tu-dominio.com/logo.png',
+    mensajes: [
+      { encabezado: 'Beneficio de cumpleaños', cuerpo: 'Un café de cortesía en tu mes.' }
+    ]
   },
   pase: {
     idObjeto: 'cliente_9912',
@@ -157,6 +177,9 @@ const tarjetaPuntos = wallet.crearPaseFidelidad({
     codigoBarras: 'PUNTOS:CR-9912',
     campos: [
       { etiqueta: 'Beneficio actual', valor: '15% de descuento en barra' }
+    ],
+    mensajes: [
+      { encabezado: 'Promo Semana', cuerpo: '2x1 en capuchinos de 16 a 19 hs.' }
     ]
   }
 });
@@ -236,15 +259,25 @@ export async function POST(req: Request) {
 
 ## Decodificador de Escáner
 
-Si tu aplicación móvil o lector web escanea los códigos de las credenciales de Google Wallet, podés limpiar y extraer el token original directamente:
+Si tu aplicación móvil, terminal de portería o lector web escanea códigos QR o URLs de Google Wallet, podés extraer el token original de manera transparente sin importar el formato:
 
 ```typescript
 import { decodificarCodigoGoogleWallet } from '@jcancelo/google-wallet';
 
-const info = decodificarCodigoGoogleWallet(codigoEscaneado);
+// 1. URL oficial con JWT de Google Wallet (pay.google.com/gp/v/save/...)
+const res1 = decodificarCodigoGoogleWallet(urlEscaneada);
+console.log(res1.codigoLimpio); // Extrae automáticamente el token del barcode o confirmationCode
+console.log(res1.formato);      // 'jwt_wallet'
 
-console.log(info.codigoLimpio); // 'TICKET-104492'
-console.log(info.formato);      // 'jwt_wallet' | 'objeto_wallet' | 'directo'
+// 2. Identificador de objeto de Google Wallet (ej: emisor.sigic_cer_1_token)
+const res2 = decodificarCodigoGoogleWallet('3388000000022839955.sigic_cer_1_25ec5117ee5a8a4789508bc5b172aeb4');
+console.log(res2.codigoLimpio); // '25ec5117ee5a8a4789508bc5b172aeb4'
+console.log(res2.formato);      // 'objeto_wallet'
+
+// 3. Formato con prefijo institucional o valor directo
+const res3 = decodificarCodigoGoogleWallet('SIGIC:ABC-9921');
+console.log(res3.codigoLimpio); // 'ABC-9921'
+console.log(res3.formato);      // 'prefijo_sigic'
 ```
 
 ---
